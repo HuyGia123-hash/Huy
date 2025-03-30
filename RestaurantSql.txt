@@ -1,0 +1,113 @@
+-- Bảng MenuItems
+CREATE TABLE MenuItems (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(255) NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL,
+    Description TEXT,
+    Category VARCHAR(100),
+    IsAvailable BOOLEAN DEFAULT TRUE
+);
+
+-- Bảng Tables
+CREATE TABLE Tables (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    TableName VARCHAR(100) NOT NULL,
+    Capacity INT
+);
+
+-- Bảng Reservations
+CREATE TABLE Reservations (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    CustomerCode VARCHAR(50),
+    CustomerName VARCHAR(255) NOT NULL,
+    PhoneNumber VARCHAR(20),
+    ReservationDate DATE,
+    ArrivalDate DATETIME,
+    NumberOfGuests INT,
+    Status VARCHAR(50)
+);
+
+-- Bảng Users
+CREATE TABLE Users (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    FullName VARCHAR(255) NOT NULL,
+    Email VARCHAR(255) UNIQUE,
+    PhoneNumber VARCHAR(20),
+    PasswordHash VARCHAR(255),
+    Role VARCHAR(50),
+    RoleId INT
+);
+
+-- Bảng Orders
+CREATE TABLE Orders (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    CustomerId INT,
+    OrderDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (CustomerId) REFERENCES Users(Id)
+);
+
+-- Bảng OrderDetails
+CREATE TABLE OrderDetails (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    OrderId INT,
+    MenuItemId INT,
+    Quantity INT NOT NULL,
+    PriceAtOrder DECIMAL(10, 2) NOT NULL,
+    SubTotal DECIMAL(10, 2),
+    FOREIGN KEY (OrderId) REFERENCES Orders(Id),
+    FOREIGN KEY (MenuItemId) REFERENCES MenuItems(Id)
+);
+
+-- Bảng Notifications
+CREATE TABLE Notifications (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    OrderId INT,
+    Message TEXT,
+    IsRead BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (OrderId) REFERENCES Orders(Id)
+);
+INSERT INTO MenuItems (Name, Price, Description, Category, IsAvailable) VALUES
+('Gà nướng mật ong', 85000.00, 'Gà nướng với sốt mật ong đặc biệt', 'Món mặn', TRUE),
+('Sườn nướng BBQ', 95000.00, 'Sườn heo ướp sốt BBQ, nướng lửa than', 'Món mặn', TRUE),
+('Mực xào sa tế', 70000.00, 'Mực tươi xào với sa tế cay nồng', 'Món mặn', TRUE),
+('Canh chua cá lóc', 60000.00, 'Cá lóc nấu với me, cà chua và rau thơm', 'Món mặn', TRUE),
+('Bò bít tết', 180000.00, 'Thịt bò nhập khẩu, nướng chín vừa, sốt tiêu', 'Món mặn', TRUE),
+('Tôm sú hấp nước dừa', 120000.00, 'Tôm sú hấp với nước dừa tươi', 'Món mặn', TRUE),
+('Ếch xào sả ớt', 75000.00, 'Thịt ếch xào cay với sả ớt', 'Món mặn', TRUE),
+('Bánh bao chiên', 30000.00, 'Bánh bao nhân thịt chiên giòn', 'Món nhẹ', TRUE),
+('Cháo hải sản', 40000.00, 'Cháo nấu từ tôm, mực và cá', 'Món nhẹ', TRUE),
+('Sandwich trứng', 25000.00, 'Sandwich kẹp trứng, phô mai và rau', 'Món nhẹ', TRUE),
+('Bánh flan caramel', 20000.00, 'Bánh flan mềm mịn với sốt caramel', 'Món nhẹ', TRUE),
+('Bánh crepe socola', 35000.00, 'Bánh crepe mỏng kèm sốt socola', 'Món nhẹ', TRUE),
+('Soup bí đỏ', 38000.00, 'Soup bí đỏ kem sữa, vị ngọt thanh', 'Món nhẹ', TRUE),
+('Xoài lắc muối ớt', 25000.00, 'Xoài chua ngọt lắc muối ớt', 'Món ăn vặt', TRUE),
+('Bò viên chiên', 30000.00, 'Bò viên chiên kèm tương ớt', 'Món ăn vặt', TRUE),
+('Bánh trứng gà non', 35000.00, 'Bánh trứng gà non giòn tan', 'Món ăn vặt', TRUE),
+('Trà sữa trân châu', 40000.00, 'Trà sữa kèm trân châu đường đen', 'Món ăn vặt', TRUE),
+('Phô mai que', 28000.00, 'Phô mai que chiên giòn', 'Món ăn vặt', TRUE),
+('Chè khúc bạch', 35000.00, 'Chè khúc bạch thanh mát, trái cây', 'Món ăn vặt', TRUE);
+INSERT INTO Tables (Id, TableName, Capacity, IsAvailable) VALUES
+(1, 'Bàn 1', 4, 1),
+(2, 'Bàn 2', 6, 1),
+(3, 'Bàn 3', 2, 0),
+(4, 'Bàn 4', 8, 1),
+(5, 'Bàn VIP', 10, 0),
+(6, 'Bàn 5', 4, 1),
+(7, 'Bàn 6', 6, 0),
+(8, 'Bàn 7', 2, 1),
+(9, 'Bàn 8', 8, 1),
+(10, 'Bàn 9', 10, 0);
+INSERT INTO Reservations (CustomerCode, CustomerName, PhoneNumber, ReservationDate, ArrivalDate, NumberOfGuests, Status) VALUES
+('01', 'Nguyễn Văn A', '0987654321', '2025-03-01', '2025-03-01 19:00:00', 4, 'Đã xác nhận'),
+('02', 'Trần Thị B', '0978123456', '2025-03-02', '2025-03-02 18:30:00', 2, 'Hoàn thành'),
+('03', 'Lê Văn C', '0968234567', '2025-03-03', '2025-03-03 20:00:00', 6, 'Hủy'),
+('04', 'Phạm Thị D', '0958345678', '2025-03-04', '2025-03-04 21:00:00', 3, 'Đã xác nhận'),
+('05', 'Hoàng Minh E', '0948456789', '2025-03-05', '2025-03-05 19:45:00', 5, 'Đã xác nhận'),
+('06', 'Bùi Thị F', '0938567890', '2025-03-06', '2025-03-06 20:30:00', 2, 'Hoàn thành'),
+('07', 'Đặng Văn G', '0928678901', '2025-03-07', '2025-03-07 19:15:00', 8, 'Đã xác nhận'),
+('08', 'Ngô Thị H', '0918789012', '2025-03-08', '2025-03-08 21:00:00', 3, 'Hủy'),
+('09', 'Tạ Minh I', '0908890123', '2025-03-09', '2025-03-09 18:45:00', 4, 'Đã xác nhận'),
+('10', 'Vũ Thị K', '0898901234', '2025-03-10', '2025-03-10 20:00:00', 7, 'Đã xác nhận'),
+('KH011', 'Gia Huy', '0778101050', '2025-03-28', '2025-04-05 08:54:00', 5, 'Đã xác nhận'),
+('KH012', 'hehe', '0778101050', '2025-03-29', '2025-04-03 00:34:00', 4, 'Chờ xác nhận'),
+('KH013', 'Cân Thanh', '0932565904', '2025-03-09', '2025-03-28 19:30:00', 3, 'Đã xác nhận');
